@@ -1,11 +1,10 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
+import QuizList from "./src/components/QuizList";
 
 export default function App() {
   return (
     <View className="flex-1 items-center justify-center bg-white">
-      <Text>Open up App.js!</Text>
-      <StatusBar style="auto" />
+      <QuizList />
     </View>
   );
 }
