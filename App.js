@@ -1,10 +1,15 @@
+import React, { useState } from "react";
 import { View } from "react-native";
-import QuizList from "./src/components/QuizList";
+import Home from "./src/screens/Home";
+import Quiz from "./src/screens/Quiz";
 
 export default function App() {
+  const [quizStarted, setQuizStarted] = useState(false);
+
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <QuizList />
+    <View style={{ flex: 1 }}>
+      {!quizStarted && <Home setQuizStarted={setQuizStarted} />}
+      {quizStarted && <Quiz setQuizStarted={setQuizStarted} />}
     </View>
   );
 }
