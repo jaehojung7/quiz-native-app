@@ -25,7 +25,7 @@ export default function SingleQuestion({
     }
     return array;
   }
-  const multipleOptions = shuffleList(answerList);
+  const multipleChoices = shuffleList(answerList);
 
   //   let correctQuestion = "";
   //   if (defaultTemplate.question.includes("&#039;" | "&quot;")) {
@@ -38,7 +38,7 @@ export default function SingleQuestion({
   //     correctQuestion = defaultTemplate.question;
   //   }
 
-  console.log(multipleOptions);
+  // console.log(multipleChoices);
 
   const renderItem = ({ item }) => {
     return (
@@ -64,10 +64,10 @@ export default function SingleQuestion({
         <Text style={styles.questionText}>{question}</Text>
       </View>
 
-      <View style={{ borderWidth: 1, borderColor: "red" }}>
+      <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.contentContainer}
-          data={multipleOptions}
+          data={multipleChoices}
           keyExtractor={(item) => item}
           renderItem={renderItem}
         />
@@ -81,12 +81,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: "center",
     justifyContent: "center",
-    borderWidth: 1,
   },
   questionContainer: {
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
+    paddingHorizontal: 5,
   },
   questionText: {
     fontSize: 19,
