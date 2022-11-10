@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,36 +9,43 @@ import {
 } from "react-native";
 
 export default function SingleQuestion({
+  index,
   question,
   correctAnswer,
   incorrectAnswers,
   setSelectedAnswer,
 }) {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [multipleArray, setMultipleArray] = useState();
 
-  // 객관식 문제 배열 생성하기: 오답 배열(incorrectAnswers)에 정답을 추가한 다음 랜덤하게 섞기
+  // 객관식 문제 랜덤배열 생성: 오답 배열(incorrectAnswers)에 정답(correctAnswer)을 추가한 다음 섞기
   const answerList = Object.values(incorrectAnswers).concat(correctAnswer);
-  function shuffleList(array) {
+  const shuffleList = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  }
-  const multipleChoices = shuffleList(answerList);
+  };
+  useEffect(() => {
+    const multipleChoices = shuffleList(answerList);
+    setMultipleArray(multipleChoices);
+  }, [index]);
 
-  //   let correctQuestion = "";
-  //   if (defaultTemplate.question.includes("&#039;" | "&quot;")) {
-  //     correctQuestion = defaultTemplate.question.replace(/&#039;/g, "'");
-  //   } else if (defaultTemplate.question.includes("&quot;")) {
-  //     correctQuestion = defaultTemplate.question.replace(/&quot;/g, '"');
-  //   } else if (defaultTemplate.question.includes("&amp;")) {
-  //     correctQuestion = defaultTemplate.question.replace(/&amp;/g, "&");
-  //   } else {
-  //     correctQuestion = defaultTemplate.question;
-  //   }
-
-  // console.log(multipleChoices);
+  // 문제에 포함된 single, double quote 변환하기
+  const correctQuestion = (question) => {
+    if (question.includes("&#039;")) {
+      return question.replace(/&#039;/g, "'");
+    }
+    if (question.includes("&quot;")) {
+      return question.replace(/&quot;/g, '"');
+    }
+    if (question.includes("&amp;")) {
+      return question.replace(/&amp;/g, "&");
+    } else {
+      return question;
+    }
+  };
 
   const renderItem = ({ item }) => {
     return (
@@ -61,13 +68,13 @@ export default function SingleQuestion({
   return (
     <View style={styles.container}>
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>{question}</Text>
+        <Text style={styles.questionText}>{correctQuestion(question)}</Text>
       </View>
 
       <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.contentContainer}
-          data={multipleChoices}
+          data={multipleArray}
           keyExtractor={(item) => item}
           renderItem={renderItem}
         />
@@ -94,11 +101,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: "space-evenly",
-    alignItems: "center",
+    // alignItems: "flex-start",
   },
 
   itemButton: {
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
     paddingHorizontal: 10,
     paddingVertical: 15,

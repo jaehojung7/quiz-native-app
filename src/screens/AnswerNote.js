@@ -5,10 +5,27 @@ export default function AnswerNote({ route }) {
   const data = route.params;
   const answerNote = data.answerNote;
 
+  // 문제에 포함된 single, double quote 변환하기
+  const correctQuestion = (question) => {
+    if (question.includes("&#039;")) {
+      return question.replace(/&#039;/g, "'");
+    }
+    if (question.includes("&quot;")) {
+      return question.replace(/&quot;/g, '"');
+    }
+    if (question.includes("&amp;")) {
+      return question.replace(/&amp;/g, "&");
+    } else {
+      return question;
+    }
+  };
+
   const renderItem = ({ item: quiz }) => {
     return (
       <View style={styles.itemContainer}>
-        <Text style={styles.question}>Question: {quiz.question}</Text>
+        <Text style={styles.question}>
+          Question: {correctQuestion(quiz.question)}
+        </Text>
         <Text style={styles.myAnswer}>My answer: {quiz.userAnswer}</Text>
         <Text style={styles.correctAnswer}>
           Correct answer: {quiz.correctAnswer}
@@ -58,6 +75,6 @@ const styles = StyleSheet.create({
   correctAnswer: {
     fontSize: 17,
     fontWeight: "600",
-    color: "#20b2aa",
+    color: "#1ca099",
   },
 });

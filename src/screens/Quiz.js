@@ -56,7 +56,7 @@ export default function Quiz({ setQuizStarted, navigation }) {
     }
   };
 
-  const handleNext = () => {
+  const handleNextButton = () => {
     setSelectedAnswer(null);
     if (currentIndex < quizArray.length) {
       setCurrentIndex(currentIndex + 1);
@@ -77,7 +77,7 @@ export default function Quiz({ setQuizStarted, navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 0.15, alignItems: "center" }}>
+      <View style={{ flex: 0.1, alignItems: "center" }}>
         <View style={styles.headerContainer}>
           {currentIndex + 1 <= quizArray?.length ? (
             <Text style={styles.mainText}>
@@ -90,9 +90,10 @@ export default function Quiz({ setQuizStarted, navigation }) {
       </View>
 
       {currentIndex < quizArray?.length && (
-        <View style={{ flex: 0.85 }}>
+        <View style={{ flex: 0.9 }}>
           <View style={styles.mainContainer}>
             <SingleQuestion
+              index={currentIndex}
               question={quizArray[currentIndex].question}
               correctAnswer={quizArray[currentIndex].correct_answer}
               incorrectAnswers={quizArray[currentIndex].incorrect_answers}
@@ -117,14 +118,19 @@ export default function Quiz({ setQuizStarted, navigation }) {
       )}
 
       {currentIndex === quizArray?.length && (
-        <View style={{ flex: 0.85 }}>
+        <View style={{ flex: 0.9 }}>
           <View style={styles.scoreContainer}>
             <Text style={styles.scoreText}>
               Your score: {quizArray.length - answerNote.length}/
               {quizArray.length}
             </Text>
 
-            <Text style={styles.scoreText}>Time: 10m 30s</Text>
+            {/* <Chart
+              total={quizArray.length}
+              incorrectNumber={answerNote.length}
+            /> */}
+
+            <Text style={styles.scoreText}>Duration: 10m 30s</Text>
           </View>
 
           <View style={styles.optionContainer}>
@@ -186,7 +192,7 @@ export default function Quiz({ setQuizStarted, navigation }) {
                 ? [styles.mainButton]
                 : [styles.mainButton, modalStyles.buttonIncorrect]
             }
-            onPress={handleNext}
+            onPress={handleNextButton}
           >
             <Text style={styles.mainButtonText}>Next</Text>
           </TouchableOpacity>
@@ -201,10 +207,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 25,
   },
   mainContainer: {
-    flex: 0.8,
+    flex: 0.75,
+    // borderWidth: 1,
     alignItems: "center",
   },
   scoreContainer: {

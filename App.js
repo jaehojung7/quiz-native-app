@@ -12,12 +12,9 @@ const QuizStack = ({ setQuizStarted }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="Quiz"
-          component={Quiz}
-          setQuizStarted={setQuizStarted}
-          options={{ headerTitle: "Quiz" }}
-        />
+        <Stack.Screen name="Quiz" options={{ headerTitle: "Quiz" }}>
+          {(props) => <Quiz {...props} setQuizStarted={setQuizStarted} />}
+        </Stack.Screen>
         <Stack.Screen
           name="AnswerNote"
           component={AnswerNote}
@@ -34,7 +31,6 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       {!quizStarted && <Home setQuizStarted={setQuizStarted} />}
-      {/* {quizStarted && <Quiz setQuizStarted={setQuizStarted} />} */}
       {quizStarted && <QuizStack setQuizStarted={setQuizStarted} />}
     </View>
   );
