@@ -1,12 +1,13 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function Home({ setQuizStarted }) {
+export default function Home({ setQuizStarted, setTimeRecord }) {
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.title}>Quiz App</Text>
       <TouchableOpacity
         onPress={() => {
+          setTimeRecord((prev) => [...prev, Date.now()]);
           setQuizStarted(true);
         }}
       >

@@ -10,7 +10,12 @@ import {
 import axios from "axios";
 import SingleQuestion from "../components/SingleQuestion";
 
-export default function Quiz({ setQuizStarted, navigation }) {
+export default function Quiz({
+  navigation,
+  setQuizStarted,
+  timeRecord,
+  setTimeRecord,
+}) {
   const [quizArray, setQuizArray] = useState();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -19,6 +24,8 @@ export default function Quiz({ setQuizStarted, navigation }) {
   const [cheatsheet, setCheatsheet] = useState();
   const [answerNote, setAnswerNote] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log(timeRecord);
 
   const getquizArray = async () => {
     setIsLoading(true);
@@ -33,10 +40,11 @@ export default function Quiz({ setQuizStarted, navigation }) {
   useEffect(() => {
     if (quizArray === undefined) {
       getquizArray();
+      console.log("rendering");
     }
   }, []);
 
-  const handleSubmit = () => {
+  const handleSelect = () => {
     if (selectedAnswer === quizArray[currentIndex].correct_answer) {
       setAnswerChecked("correct");
       setModalVisible(true);
@@ -64,6 +72,21 @@ export default function Quiz({ setQuizStarted, navigation }) {
     setModalVisible(false);
   };
 
+  const handleSubmit = () => {
+    setTimeRecord((prev) => [...prev, Date.now()]);
+    handleSelect();
+  };
+
+  const timeCoversion = (start, end) => {
+    const difference = end - start;
+    const minutes = Math.floor(difference / 1000 / 60);
+    const seconds = Math.floor((difference - minutes * 60 * 1000) / 1000);
+    const record = { minutes: minutes, seconds: seconds };
+    return record;
+  };
+
+  const duration = timeCoversion(timeRecord[0], timeRecord[1]);
+
   const setSelectedAnswerFromChild = (answer) => {
     setSelectedAnswer(answer);
   };
@@ -84,7 +107,7 @@ export default function Quiz({ setQuizStarted, navigation }) {
               Progress: {currentIndex + 1} / {quizArray?.length}
             </Text>
           ) : (
-            <Text style={styles.scoreText}>Result</Text>
+            <Text style={{ fontSize: 27, fontWeight: "600" }}>Result</Text>
           )}
         </View>
       </View>
@@ -108,7 +131,11 @@ export default function Quiz({ setQuizStarted, navigation }) {
                   ? [styles.mainButton, styles.buttonDisable]
                   : styles.mainButton
               }
-              onPress={handleSubmit}
+              onPress={
+                currentIndex === quizArray?.length - 1
+                  ? handleSubmit
+                  : handleSelect
+              }
               disabled={selectedAnswer === null ? true : false}
             >
               <Text style={styles.mainButtonText}>Select</Text>
@@ -121,16 +148,19 @@ export default function Quiz({ setQuizStarted, navigation }) {
         <View style={{ flex: 0.9 }}>
           <View style={styles.scoreContainer}>
             <Text style={styles.scoreText}>
-              Your score: {quizArray.length - answerNote.length}/
-              {quizArray.length}
+              {quizArray.length - answerNote.length} / {quizArray.length}
+            </Text>
+            <Text style={styles.mainText}>(Correct / Total)</Text>
+            <Text style={styles.mainText}>
+              Rate:{" "}
+              {((quizArray.length - answerNote.length) / quizArray.length) *
+                100}
+              %
             </Text>
 
-            {/* <Chart
-              total={quizArray.length}
-              incorrectNumber={answerNote.length}
-            /> */}
-
-            <Text style={styles.scoreText}>Duration: 10m 30s</Text>
+            <Text style={styles.mainText}>
+              Duration: {duration.minutes}m {duration.seconds}s
+            </Text>
           </View>
 
           <View style={styles.optionContainer}>
@@ -139,6 +169,7 @@ export default function Quiz({ setQuizStarted, navigation }) {
               onPress={() => {
                 setCurrentIndex(0);
                 setAnswerNote([]);
+                setTimeRecord([Date.now()]);
               }}
             >
               <Text style={styles.mainButtonText}>Try again</Text>
@@ -158,6 +189,7 @@ export default function Quiz({ setQuizStarted, navigation }) {
               onPress={() => {
                 setQuizStarted(false);
                 setAnswerNote([]);
+                setTimeRecord([]);
               }}
             >
               <Text style={styles.mainButtonText}>Finish</Text>
@@ -228,8 +260,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   scoreText: {
-    fontSize: 27,
-    fontWeight: "600",
+    fontSize: 50,
+    fontWeight: "700",
   },
   buttonContainer: {
     flex: 0.2,

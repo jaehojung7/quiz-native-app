@@ -8,12 +8,19 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-const QuizStack = ({ setQuizStarted }) => {
+const QuizStack = ({ setQuizStarted, timeRecord, setTimeRecord }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Quiz" options={{ headerTitle: "Quiz" }}>
-          {(props) => <Quiz {...props} setQuizStarted={setQuizStarted} />}
+          {(props) => (
+            <Quiz
+              {...props}
+              setQuizStarted={setQuizStarted}
+              timeRecord={timeRecord}
+              setTimeRecord={setTimeRecord}
+            />
+          )}
         </Stack.Screen>
         <Stack.Screen
           name="AnswerNote"
@@ -27,11 +34,21 @@ const QuizStack = ({ setQuizStarted }) => {
 
 export default function App() {
   const [quizStarted, setQuizStarted] = useState(false);
+  const [timeRecord, setTimeRecord] = useState([]);
+  console.log(timeRecord);
 
   return (
     <View style={{ flex: 1 }}>
-      {!quizStarted && <Home setQuizStarted={setQuizStarted} />}
-      {quizStarted && <QuizStack setQuizStarted={setQuizStarted} />}
+      {!quizStarted && (
+        <Home setQuizStarted={setQuizStarted} setTimeRecord={setTimeRecord} />
+      )}
+      {quizStarted && (
+        <QuizStack
+          setQuizStarted={setQuizStarted}
+          timeRecord={timeRecord}
+          setTimeRecord={setTimeRecord}
+        />
+      )}
     </View>
   );
 }
