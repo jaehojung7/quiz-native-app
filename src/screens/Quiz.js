@@ -97,7 +97,7 @@ export default function Quiz({
     );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ flex: 0.1, alignItems: "center" }}>
         <View style={styles.headerContainer}>
           {currentIndex + 1 <= quizArray?.length ? (
