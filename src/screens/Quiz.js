@@ -28,7 +28,7 @@ export default function Quiz({
   const getquizArray = async () => {
     setIsLoading(true);
     const res = await axios.get(
-      "https://opentdb.com/api.php?amount=7&category=17&difficulty=easy&type=multiple"
+      "https://opentdb.com/api.php?amount=7&category=21&difficulty=easy&type=multiple"
     );
     const result = res.data["results"];
     setQuizArray(result);
