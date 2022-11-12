@@ -1,3 +1,5 @@
+## 미리보기
+
 ![Preview](https://user-images.githubusercontent.com/89124326/201456795-f6643584-af66-4e20-863f-8cb3585cb859.gif)
 
 ## App 구조
