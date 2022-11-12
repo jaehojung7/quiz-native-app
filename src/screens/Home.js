@@ -11,7 +11,7 @@ export default function Home({ setQuizStarted, setTimeRecord }) {
           setQuizStarted(true);
         }}
       >
-        <Text style={styles.start}>Start</Text>
+        <Text style={styles.start}>퀴즈 풀기</Text>
       </TouchableOpacity>
     </View>
   );
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   title: {
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: "700",
     marginBottom: 15,
   },

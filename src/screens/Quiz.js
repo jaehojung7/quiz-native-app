@@ -25,12 +25,10 @@ export default function Quiz({
   const [answerNote, setAnswerNote] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(timeRecord);
-
   const getquizArray = async () => {
     setIsLoading(true);
     const res = await axios.get(
-      "https://opentdb.com/api.php?amount=5&category=21&difficulty=easy&type=multiple"
+      "https://opentdb.com/api.php?amount=7&category=17&difficulty=easy&type=multiple"
     );
     const result = res.data["results"];
     setQuizArray(result);
@@ -40,7 +38,6 @@ export default function Quiz({
   useEffect(() => {
     if (quizArray === undefined) {
       getquizArray();
-      console.log("rendering");
     }
   }, []);
 
@@ -77,7 +74,8 @@ export default function Quiz({
     handleSelect();
   };
 
-  const timeCoversion = (start, end) => {
+  // 문제 푸는데 걸린 시간 단위 변환하기
+  const timeConversion = (start, end) => {
     const difference = end - start;
     const minutes = Math.floor(difference / 1000 / 60);
     const seconds = Math.floor((difference - minutes * 60 * 1000) / 1000);
@@ -85,7 +83,7 @@ export default function Quiz({
     return record;
   };
 
-  const duration = timeCoversion(timeRecord[0], timeRecord[1]);
+  const duration = timeConversion(timeRecord[0], timeRecord[1]);
 
   const setSelectedAnswerFromChild = (answer) => {
     setSelectedAnswer(answer);
@@ -107,7 +105,7 @@ export default function Quiz({
               Progress: {currentIndex + 1} / {quizArray?.length}
             </Text>
           ) : (
-            <Text style={{ fontSize: 27, fontWeight: "600" }}>Result</Text>
+            <Text style={{ fontSize: 27, fontWeight: "600" }}>결과 확인</Text>
           )}
         </View>
       </View>
@@ -138,7 +136,7 @@ export default function Quiz({
               }
               disabled={selectedAnswer === null ? true : false}
             >
-              <Text style={styles.mainButtonText}>Select</Text>
+              <Text style={styles.mainButtonText}>Confirm</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -150,16 +148,18 @@ export default function Quiz({
             <Text style={styles.scoreText}>
               {quizArray.length - answerNote.length} / {quizArray.length}
             </Text>
-            <Text style={styles.mainText}>(Correct / Total)</Text>
+            <Text style={styles.mainText}>(정답 개수 / 총 문제 수)</Text>
             <Text style={styles.mainText}>
-              Rate:{" "}
-              {((quizArray.length - answerNote.length) / quizArray.length) *
-                100}
+              정답 확률:{" "}
+              {Math.floor(
+                ((quizArray.length - answerNote.length) / quizArray.length) *
+                  100
+              )}
               %
             </Text>
 
             <Text style={styles.mainText}>
-              Duration: {duration.minutes}m {duration.seconds}s
+              걸린 시간: {duration.minutes}분 {duration.seconds}초
             </Text>
           </View>
 
@@ -172,7 +172,7 @@ export default function Quiz({
                 setTimeRecord([Date.now()]);
               }}
             >
-              <Text style={styles.mainButtonText}>Try again</Text>
+              <Text style={styles.mainButtonText}>다시 풀기</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -181,7 +181,7 @@ export default function Quiz({
                 navigation.navigate("AnswerNote", { answerNote });
               }}
             >
-              <Text style={styles.mainButtonText}>Review answers</Text>
+              <Text style={styles.mainButtonText}>오답 노트</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -192,7 +192,7 @@ export default function Quiz({
                 setTimeRecord([]);
               }}
             >
-              <Text style={styles.mainButtonText}>Finish</Text>
+              <Text style={styles.mainButtonText}>끝내기</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -209,11 +209,11 @@ export default function Quiz({
           <View style={{ marginBottom: 15 }}>
             {answerChecked === "correct" ? (
               <Text style={modalStyles.modalText}>
-                Correct! Answer is {cheatsheet}
+                Right! Answer is {cheatsheet}
               </Text>
             ) : (
               <Text style={modalStyles.modalText}>
-                Wrong! Answer is {cheatsheet}
+                Wrong! Answer is {cheatsheet}{" "}
               </Text>
             )}
           </View>
@@ -242,7 +242,6 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 0.75,
-    // borderWidth: 1,
     alignItems: "center",
   },
   scoreContainer: {
@@ -256,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   mainText: {
-    fontSize: 23,
+    fontSize: 22,
     fontWeight: "600",
   },
   scoreText: {
@@ -287,7 +286,7 @@ const styles = StyleSheet.create({
 
 const modalStyles = StyleSheet.create({
   modalContainer: {
-    height: "27%",
+    height: "25%",
     marginTop: "auto",
     backgroundColor: "#cacfd2",
     borderTopLeftRadius: 10,
