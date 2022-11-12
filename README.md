@@ -15,7 +15,7 @@
 
 - 상단에 진행 상황(총 문제 수와 현재 번호)을 확인합니다.
 - 유저가 답을 선택하고 confirm 버튼을 누르면 Modal 스크린이 올라옵니다.
-- Modal 스크린에는 정답 여부와 다음 문제로 넘어가는 Next 버튼이 있습니다.
+- Modal 스크린에서 정답 여부를 확인하고 다음 문제로 넘어가는 Next 버튼을 클릭합니다.
 - 마지막 문제를 풀고 Next 버튼을 누르면 결과 확인 스크린을 보여줍니다.
 
 ### 결과 확인
@@ -38,3 +38,5 @@
 
 - Quiz 컴포넌트는 SingleQuestion 컴포넌트로 question, correct_answer, incorrect_answers를 props으로 전달합니다.
 - incorrect_answers 배열에 correct_answer을 추가하고, shuffleList function으로 배열을 랜덤으로 섞어서 리턴합니다.
+
+### Jest app test
